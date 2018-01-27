@@ -111,16 +111,16 @@
 							</ul>
 						</small>
 						<pre>
-							<code class="hljs" data-trim>
-								>> StTpcHitMaker.cxx
-								...}
-								else {
-									mQuery = Form("itpc/%s[%i]",cldadc.Data(),sector);
-									daqTpcTable = GetNextDaqElement(mQuery);
-									if (daqTpcTable) {
-										kReaderType = kStandardiTPC;
-								}
-								else {...
+							<code class="hljs">
+>> StTpcHitMaker.cxx
+...}
+	else {
+		mQuery = Form("itpc/%s[%i]",cldadc.Data(),sector);
+		daqTpcTable = GetNextDaqElement(mQuery);
+		if (daqTpcTable) {
+			kReaderType = kStandardiTPC;
+		}
+		else {...
 								</code>
 						</pre>
 					</section>
