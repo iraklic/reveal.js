@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>iTPC Software Status</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-transition="convex">
+					<header background-color="white"!>
+						<img class="plain" width=20% background-color="white" src="http://www.star.bnl.gov/~iraklic/images/Kent_logo.png" alt=""><br>
+						<img class="plain" width=20% src="http://www.star.bnl.gov/~iraklic/images/BNL_logo.png" alt="">
+						<img class="plain" width=10% src="http://www.star.bnl.gov/~iraklic/images/Shandong_logo.png" alt="">
+					</header>
+					<h2>iTPC Software</h2>
+					<h4>Status Update <br>
+						 Irakli Chakaberia
+					</h4>
+					<small>
+						STAR Collaboration Meeting <br>
+						28 January 2018
+					</small>
+
+				</section>
+				<section data-transition="convex">
+					<h2>OVERVIEW</h2>
+					<small>
+						<ul>
+							<li><h3>Update Since Analysis <a href="https://drupal.star.bnl.gov/STAR/meetings/star-fall-2017-analysis-meeting/plenary-software/itpc-software">Meeting Nov, 2017</a></h3></li>
+							<li><h3>iTPC Software Plan</h3></li>
+							<ul>
+								<li>Nov 2017 : Demonstrate first simulations, reconstruction, and evaluation</li>
+								<li>Jan 2018 : Online code ready – to reconstruct real data</li>
+								<li>Feb 2018 : Code evaluation with cosmic data</li>
+								<li>March-May 2018 : Real data evaluation</li>
+							</ul>
+						</ul>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+						<h3>Scope of the Software</h3>
+						<ul>
+							<li>Data reconstruction in iTPC era</li>
+							<li>Simulations with new iTPC Geometry</li>
+							<li>Simulation with new iTPC Electonics: ALTRO &rarr; SAMPA</li>
+						</ul>
+						<img width="45%" src="http://www.star.bnl.gov/~iraklic/images/y2018_Geo.jpg" alt="">
+						<img width="45%" src="http://www.star.bnl.gov/~iraklic/images/y2019_Geo.jpg" alt="">
+
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+						<h3>Update on Status : General</h3>
+						<ul>
+							<li>Software was migrated to <code>dev</code> area</li>
+							<li>Sucessfully tested showing the below results</li>
+							<li>The shown results are based on <code>Agi</code> geometry scheme</li>
+							<li>AgML geometry for complete iTPC is ready and work for scheme change is in progress</li>
+							<img src="http://www.star.bnl.gov/~iraklic/images/hits.png" alt="">
+						</ul>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+						<h3>Update on Status : y2018 issue</h3>
+						<ul>
+							<li>Defficiency for y2018 recovered</li>
+						</ul><br>
+						<img width=45% src="http://www.star.bnl.gov/~iraklic/images/hits_phi.png" alt="">
+						<img class="fragment" width=45% src="http://www.star.bnl.gov/~iraklic/images/efficiency.png" alt="">
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+						<h3>Update on Status : ALTRO &rarr; SAMPA</h3>
+						<ul>
+							<li>SAMPA has four pole digital tail cancellation capability vs. three in ALTRO</li>
+							<li>Forth tail cancellation step added to the software`</li>
+							<img width="45%" src="http://www.star.bnl.gov/~iraklic/images/ALTRO.png" alt="">
+							<img width="45%" src="http://www.star.bnl.gov/~iraklic/images/SAMPA.png" alt="">
+							<li>Pulser data from iTPC will be used to select the TCF parameters</li>
+						</ul>
+					</small>
+				</section>
+				<section data-transition="convex">
+						<h3>Reading Real Data</h3>
+						<small>
+							<ul>
+								<li><code>itpc</code> is a new data stream to read out</li>
+								<li>It was added to the software</li>
+							</ul>
+						</small>
+						<pre>
+							<code class="hljs" data-trim>
+								>> StTpcHitMaker.cxx
+								...}
+								else {
+									mQuery = Form("itpc/%s[%i]",cldadc.Data(),sector);
+									daqTpcTable = GetNextDaqElement(mQuery);
+									if (daqTpcTable) {
+										kReaderType = kStandardiTPC;
+								}
+								else {...
+								</code>
+						</pre>
+					</section>
+				<section data-transition="convex">
+					<h3>iTPC Data</h3>
+					<small>
+						<ul>
+							<li>iTPC sector 20 was tested and pulser sicnal recorded</li>
+							<li>Data is sucessfully read as shown below</li>
+						</ul>
+					</small>
+					<img width="40%" src="http://www.star.bnl.gov/~iraklic/temp/iTPC_adc.gif" alt="">
+					<img width="40%" src="http://www.star.bnl.gov/~iraklic/temp/iTPC_readout.gif" alt="">
+				</section>
+				<section data-transition="convex">
+					<h3>Summary</h3>
+					<small>
+						<ul>
+							<li>Software sucessfully tested on <code>dev</code></li>
+							<li><code>AgML</code> for complete iTPC created and interface conversion in progress</li>
+							<li>New <code>itpc</code> readout added : ready to take data</li>
+							<li>Pulser data will be used to optimize TCF</li>
+							<li>Software discussed with and passed to S&C group for their review</li>
+							<li>Work with S&C continues towards final integration</li>
+							<li>Let the cosmic rays flow through the iTPC...</li>
+						</ul>
+					</small>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				slideNumber: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
