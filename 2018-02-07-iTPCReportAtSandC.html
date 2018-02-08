@@ -34,33 +34,156 @@
 					</small>
 				</section>
 				<section data-transition="convex">
-					<h4>1.  Do I need CleanSlate/StarVMC/Rotations? I did not find where they are used?</h4>
+					How was my package composed
 					<small>
-						Agi related
+					<ul>
+						<li>I work on <code>dev</code></li>
+						<li>Necessary codes checked out from CVS : <code>cvs co &lt;whatever&gt;</code> </li>
+						<li>iTPC changes put in place</li>
+						<li>If compilation requires additinal packages, to the ones that have changes, they are checked out from CVS as well</li>
+						<li>My <code>diff</code>s are with <code>dev</code></li>
+					</ul>
+				</small>
+					In next slides I will address Vivtor's feedback points
+					 <a href="https://drupal.star.bnl.gov/STAR/event/2018/02/01/sc-offline-software/itpc-software-readiness-review">from last meeting (02 Feb 2018)</a>
+				</section>
+				<section data-transition="convex">
+					<small>
+					<p class="question">Q: 1.  Do I need <code>CleanSlate/StarVMC/Rotations</code>? I did not find where they are used?</p>
+					<p class="answer">A: It is used in <code>StarDb/AgiGeometry/CreateGeometry.h</code> and is <code>Agi</code> related. Will not be needed once we move to
+					<code>AgML</code> interface</p>
 					</small>
 				</section>
 				</section>
 				<section data-transition="convex">
-					<h4>2.  Do I need StTrsMaker? It is not used any more</h4>
 					<small>
-						Agi related
+					<p class="question">Q: 2.  Do I need <code>StTrsMaker</code>? It is not used any more</p>
+					<p class="answer">A: Since <code>StTrsMaker</code> is not deprecated the changes were made to keep code backwards compatible,
+					e.g. in pre-2008 era when it is used the code will still work.</p>
 					</small>
 				</section>
 				<section data-transition="convex">
-					<h4>9. In StdEdxY2Maker flag __Use_dNdx__ is ON</h4>
 					<small>
-						I commented out __Use_dNdx__ flag from
-						./StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx
+					<p class="question">Q: 3.  I do not see <code>TPCCATracker</code>. Is it really not modified? Geometry of iTPC is very different.</p>
+					<p class="answer">A: Does not require changes, changes in <code>StiCA</code> will hande the difference in geometry</p>
 					</small>
 				</section>
 				<section data-transition="convex">
-					<h4>11. Some asserts in Sti are commented out.</h4>
 					<small>
-						/afs/rhic.bnl.gov/star/packages/repository/StRoot/Sti/StiHit.cxx
-						assert( detector->insideL(dd,7,1.5));
-						/afs/rhic.bnl.gov/star/packages/repository/StRoot/Sti/StiLocalTrackSeedFinder.cxx
-						assert (fabs(dr) >1.e-3); //// || dy==0. || dz==0.);
+						<p class="question">Q: 4. There is a lot of changes in Sti related to "Alignment" Is it related to iTPC?</p>
+						<p class="answer">A: No, they are not needed for iTPC and I removed them:</p>
+					<pre><code class="hljs">
+>> StRoot/Sti/StiKalmanTrackFinder.cxx
+Bool_t StiKalmanTrackFinder::_DoAlignment = kFALSE;
+. . .
+// Aligment part
+if (DoAlignment()) {
+	UInt_t sector = track->getTpcSector();
+	if (sector) {
+		const StTpcHit *tpcHit = dynamic_cast&lt;const StTpcHit *&gt;(stiHit->stHit());
+		if (tpcHit && tpcHit->sector() != sector) continue;
+		}
+	}
+					</code></pre>
+					<p class="answer">If you think there is more alignment related code please let me know and I will try to figure it out.</p>
 					</small>
+				</section>
+				<section data-transition="convex">
+					<p class="question">Q: 5 - 7 About changes in Sti</p>
+					<p class="answer">A: I only see <code>tpcPadConfig</code>/iTPC related changes or minor cosmetic ones that I can easily reverse, please let me know if you see others.</p>
+				</section>
+				<section data-transition="convex">
+					<small>
+					<p class="question">Q: 8. There is a <code>__NEW_TPCCATracker__</code> cpp flag. That means that NEW and OLD tracker should have different libraries.
+      Support is not easy. QUESTION: if _NEW_TPCCATracker__ is ON, old TPC will work properly?</p>
+					<p class="answer">A: This flag is actually in <code>dev</code> not in my code and it is not relevant anymore. There must be no pre-interface-change remnants in my package</p>
+					<pre><code class="hljs">
+diff -b -r1.5 StiCATpcTrackerInterface.cxx
+2d1
+< #ifdef __NEW_TPCCATracker__
+6,10d4
+< #else /* ! __NEW_TPCCATracker__ */
+< #include "TPCCATracker/AliHLTTPCCAGBHit.h"
+< #include "TPCCATracker/AliHLTTPCCAGBTrack.h"
+< #include "TPCCATracker/AliHLTTPCCAParam.h"
+< #endif /* __NEW_TPCCATracker__ */
+33d26
+< #ifdef __NEW_TPCCATracker__
+36,40c29
+< #else /* ! __NEW_TPCCATracker__ */
+< #include "TPCCATracker/Performance/AliHLTTPCCAStiPerformance.h"
+< #include "TPCCATracker/Performance/AliHLTTPCCAMergerPerformance.h"
+< #endif /* __NEW_TPCCATracker__ */
+< #include "StDetectorDbMaker/St_tpcPadPlanesC.h"
+
+					</code></pre>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+					<p class="question">Q:  9. In StdEdxY2Maker flag <code>__Use_dNdx__</code> is ON, but official id OFF. For iTPC only  ON or not</p>
+					<p class="answer">A: I commented out <code>__Use_dNdx__</code> flag from
+					./StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx </p>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+					<p class="question">10. In <code>StiDetectorBuilder.cxx</code>, removing:
+						<pre><code class="hljs">
+nameP.ReplaceAll("HALL_1/CAVE_1/","");
+nameP.ReplaceAll("TpcRefSys_1/","");
+nameP.ReplaceAll("IDSM_1/","");
+nameP.ReplaceAll("PXMO_1/","");
+nameP.ReplaceAll("IBMO_1/","");
+nameP.ReplaceAll("TPCE_1/","");
+		 			</code></pre>
+				</p>
+					<p class="answer">A: This is just related to printout only as far as I understand. This cam be reverted back.
+					Actually only these were added to shorten the name</p>
+						<pre><code class="hljs">
+>   nameP.ReplaceAll("TpcRefSys_1/","");
+>   nameP.ReplaceAll("IDSM_1/","");
+>   nameP.ReplaceAll("PXMO_1/","");
+>   nameP.ReplaceAll("IBMO_1/","");
+>   nameP.ReplaceAll("TPCE_1/","");
+				</code></pre>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<small>
+					<p class="question">Q: 11. Some <code>asserts</code> in Sti are commented out.</p>
+					<p class="answer">A: I only see two <code>asserts</code> removed:
+						<pre><code class="hljs">
+>> /afs/rhic.bnl.gov/star/packages/repository/StRoot/Sti/StiHit.cxx
+assert( detector->insideL(dd,7,1.5));
+				</code></pre>
+				Above one is activated sometimes and we need to understand it.
+				<pre><code class="hljs">
+>> /afs/rhic.bnl.gov/star/packages/repository/StRoot/Sti/StiLocalTrackSeedFinder.cxx
+diff -b -r2.44 StiLocalTrackSeedFinder.cxx
+197,198c197
+<   if (fabs(dr) <=1.e-3) return false;
+<   assert (fabs(dr) >1.e-3); //// || dy==0. || dz==0.);
+---
+>   if (fabs(dr) <1.e-3) return kFALSE;
+					</code></pre>
+					Above one is just not used because of <code>if() return;</code> in previous line.
+				</p>
+					</small>
+				</section>
+				<section data-transition="convex">
+					<h3>Summary<h3>
+						<small>
+							<ul>
+
+
+						<li>I think this answers all the questions except one <code>assert</code> that I am trying to debug.</li>
+						<li>Just to repeat : this is still with <code>AgiGeometry</code> but I wante to address these points first.</li>
+						<li>There are cosmetic changes in Sti (e.g. <code>throw()</code> is replaces with printouts) and I can reverse them easily.</li>
+						<li>If you see any other changes please let me know.</li>
+						<li>Further feedback is appreciated / needed.</li>
+						</ul>
+						</small>
 				</section>
 			</div>
 		</div>

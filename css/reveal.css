@@ -1553,3 +1553,15 @@ body {
 
 .zoomed .reveal .roll span:after {
   visibility: hidden; }
+
+/************************************************
+* IRAKLI's STUFF
+************************************************/
+.question {
+  display: block;
+  color: red;
+}
+.answer {
+  display: block;
+  color: blue;
+}
